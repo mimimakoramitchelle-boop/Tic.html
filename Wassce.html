@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduGhana · BECE School Placement Calculator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen p-3 sm:p-6 font-sans">
+
+    <!-- Main Container -->
+    <div class="max-w-4xl mx-auto space-y-6">
+        
+        <!-- Header Banner -->
+        <header class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-2xl">🎓</span>
+                    <span class="inline-block bg-blue-100 text-blue-700 font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider">
+                        Ghana CSSPS Portal Simulator
+                    </span>
+                    <a href="presentation_slides.html" class="inline-block bg-amber-100 text-amber-800 font-bold text-xs px-3 py-1 rounded-full hover:bg-amber-200 transition">
+                        View Slide Deck
+                    </a>
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                    BECE Placement &amp; Aggregate Checker
+                </h1>
+                <p class="text-sm text-slate-500 mt-1">
+                    Calculate your Best 6 Aggregate &amp; discover Category A, B, and C schools you qualify for.
+                </p>
+            </div>
+            
+            <!-- Big Aggregate Number Display Badge -->
+            <div class="bg-blue-600 text-white rounded-2xl p-5 text-center min-w-[150px] shadow-md">
+                <span class="text-xs uppercase font-bold tracking-wider text-blue-200 block">Best 6 Aggregate</span>
+                <span id="displayAggregate" class="text-4xl font-black block my-0.5">--</span>
+                <span id="aggregateStatus" class="text-[11px] font-medium text-blue-100">Select Grades</span>
+            </div>
+        </header>
+
+        <!-- Two Column Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- LEFT COLUMN: GRADE SELECTOR (7 Columns) -->
+            <div class="lg:col-span-7 bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-6">
+                
+                <div>
+                    <h2 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                        <span>📝</span> Enter Your Examination Grades
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-0.5">
+                        Official WAEC Rules: 3 Core Subjects (English, Math, Science) + Best 3 Electives
+                    </p>
+                </div>
+
+                <!-- 1. MANDATORY 3 CORE SUBJECTS -->
+                <div>
+                    <h3 class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-3">1. Mandatory Core Subjects (3 Cores)</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">English Language</label>
+                            <select id="gradeEnglish" class="grade-input w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-slate-700">
+                                <option value="1">Grade 1 (A1)</option>
+                                <option value="2" selected>Grade 2 (B2)</option>
+                                <option value="3">Grade 3 (B3)</option>
+                                <option value="4">Grade 4 (C4)</option>
+                                <option value="5">Grade 5 (C5)</option>
+                                <option value="6">Grade 6 (C6)</option>
+                                <option value="7">Grade 7 (D7)</option>
+                                <option value="8">Grade 8 (E8)</option>
+                                <option value="9">Grade 9 (F9)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Mathematics</label>
+                            <select id="gradeMath" class="grade-input w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-slate-700">
+                                <option value="1" selected>Grade 1 (A1)</option>
+                                <option value="2">Grade 2 (B2)</option>
+                                <option value="3">Grade 3 (B3)</option>
+                                <option value="4">Grade 4 (C4)</option>
+                                <option value="5">Grade 5 (C5)</option>
+                                <option value="6">Grade 6 (C6)</option>
+                                <option value="7">Grade 7 (D7)</option>
+                                <option value="8">Grade 8 (E8)</option>
+                                <option value="9">Grade 9 (F9)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Integrated Science</label>
+                            <select id="gradeScience" class="grade-input w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-slate-700">
+                                <option value="1">Grade 1 (A1)</option>
+                                <option value="2" selected>Grade 2 (B2)</option>
+                                <option value="3">Grade 3 (B3)</option>
+                                <option value="4">Grade 4 (C4)</option>
+                                <option value="5">Grade 5 (C5)</option>
+                                <option value="6">Grade 6 (C6)</option>
+                                <option value="7">Grade 7 (D7)</option>
+                                <option value="8">Grade 8 (E8)</option>
+                                <option value="9">Grade 9 (F9)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. ELECTIVE SUBJECTS (Top 3 will be selected automatically) -->
+                <div>
+                    <h3 class="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-3">2. Best Elective Subjects (Select Your Scores)</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Social Studies</label>
+                            <select id="gradeSocial" class="grade-input w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-slate-700">
+                                <option value="1">Grade 1</option>
+                                <option value="2">Grade 2</option>
+                                <option value="3" selected>Grade 3</option>
+                                <option value="4">Grade 4</option>
+                                <option value="5">Grade 5</option>
+                                <option value="6">Grade 6</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Elective 1 (e.g. ICT / RME)</label>
+                            <select id="gradeElective1" class="grade-input w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-slate-700">
+                                <option value="1" selected>Grade 1</option>
+                                <option value="2">Grade 2</option>
+                                <option value="3">Grade 3</option>
+                                <option value="4">Grade 4</option>
+                                <option value="5">Grade 5</option>
+                                <option value="6">Grade 6</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Elective 2 (e.g. French / BDT)</label>
+                            <select id="gradeElective2" class="grade-input w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-slate-700">
+                                <option value="1">Grade 1</option>
+                                <option value="2" selected>Grade 2</option>
+                                <option value="3">Grade 3</option>
+                                <option value="4">Grade 4</option>
+                                <option value="5">Grade 5</option>
+                                <option value="6">Grade 6</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Elective 3 (e.g. Ghanaian Language)</label>
+                            <select id="gradeElective3" class="grade-input w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-slate-700">
+                                <option value="1">Grade 1</option>
+                                <option value="2">Grade 2</option>
+                                <option value="3" selected>Grade 3</option>
+                                <option value="4">Grade 4</option>
+                                <option value="5">Grade 5</option>
+                                <option value="6">Grade 6</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Slip Button -->
+                <div class="flex items-center gap-3 pt-2">
+                    <button id="saveSlipBtn" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition cursor-pointer">
+                        💾 Save Result Slip (LocalStorage)
+                    </button>
+                    <span id="savedAlert" class="text-xs font-semibold text-emerald-600 hidden">
+                        ✓ Saved to your browser!
+                    </span>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: QUALIFIED SCHOOLS (5 Columns) -->
+            <div class="lg:col-span-5 bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col">
+                
+                <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                    <div>
+                        <h2 class="text-base font-extrabold text-slate-900">Qualified SHS Schools</h2>
+                        <p class="text-xs text-slate-400">Based on Ghana CSSPS cut-off criteria</p>
+                    </div>
+                    <!-- Gender Filter Dropdown -->
+                    <select id="genderFilter" class="bg-slate-100 border-0 rounded-lg text-xs font-bold px-2.5 py-1.5 text-slate-700 cursor-pointer">
+                        <option value="all">All Schools</option>
+                        <option value="Boys">Boys Only</option>
+                        <option value="Girls">Girls Only</option>
+                        <option value="Mixed">Mixed (Co-ed)</option>
+                    </select>
+                </div>
+
+                <!-- Schools Card Feed -->
+                <div id="schoolsList" class="space-y-3 overflow-y-auto max-h-[460px] pr-1 flex-1">
+                    <!-- Cards are created dynamically by script.js -->
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- LINK THE SEPARATE JAVASCRIPT FILE -->
+    <script src="wassce.js"></script>
+</body>
+</html>

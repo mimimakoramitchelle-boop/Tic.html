@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game 1: Tic-Tac-Toe Arena · Codetrain Africa</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center p-4 font-sans">
+    <div class="bg-slate-800 border border-slate-700 w-full max-w-sm p-6 sm:p-8 rounded-3xl shadow-2xl">
+        <div class="text-center mb-5">
+            <span class="inline-block bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2">
+                Project 1 · Codetrain JS
+            </span>
+            <h1 class="text-2xl font-black text-white">Tic-Tac-Toe Arena</h1>
+            <p class="text-xs text-slate-400 mt-1">2-Player local match or play against AI</p>
+        </div>
+
+        <div class="flex justify-between items-center mb-4 text-xs">
+            <div class="flex bg-slate-900 p-1 rounded-lg border border-slate-700">
+                <button id="p2ModeBtn" class="px-2.5 py-1 rounded bg-indigo-600 text-white font-bold cursor-pointer">2 Players</button>
+                <button id="aiModeBtn" class="px-2.5 py-1 rounded text-slate-400 hover:text-white cursor-pointer">vs AI Bot</button>
+            </div>
+            <span id="turnBadge" class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-3 py-1 rounded-full font-bold">
+                Player X's Turn
+            </span>
+        </div>
+
+        <div class="grid grid-cols-3 text-center bg-slate-900/60 p-2.5 rounded-xl border border-slate-700 mb-5 text-xs">
+            <div><span class="text-slate-400 font-medium">Player X</span><p id="scoreX" class="text-lg font-black text-indigo-400">0</p></div>
+            <div><span class="text-slate-400 font-medium">Draws</span><p id="scoreTies" class="text-lg font-black text-slate-200">0</p></div>
+            <div><span class="text-slate-400 font-medium">Player O</span><p id="scoreO" class="text-lg font-black text-rose-400">0</p></div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2.5 mb-5 aspect-square">
+            <button data-index="0" class="cell bg-slate-900 hover:bg-slate-700/60 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl font-black border border-slate-700 cursor-pointer shadow-inner"></button>
+            <button data-index="1" class="cell bg-slate-900 hover:bg-slate-700/60 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl font-black border border-slate-700 cursor-pointer shadow-inner"></button>
+            <button data-index="2" class="cell bg-slate-900 hover:bg-slate-700/60 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl font-black border border-slate-700 cursor-pointer shadow-inner"></button>
+            <button data-index="3" class="cell bg-slate-900 hover:bg-slate-700/60 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl font-black border border-slate-700 cursor-pointer shadow-inner"></button>
+            <button data-index="4" class="cell bg-slate-900 hover:bg-slate-700/60 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl font-black border border-slate-700 cursor-pointer shadow-inner"></button>
+            <button data-index="5" class="cell bg-slate-900 hover:bg-slate-700/60 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl font-black border border-slate-700 cursor-pointer shadow-inner"></button>
+            <button data-index="6" class="cell bg-slate-900 hover:bg-slate-700/60 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl font-black border border-slate-700 cursor-pointer shadow-inner"></button>
+            <button data-index="7" class="cell bg-slate-900 hover:bg-slate-700/60 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl font-black border border-slate-700 cursor-pointer shadow-inner"></button>
+            <button data-index="8" class="cell bg-slate-900 hover:bg-slate-700/60 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl font-black border border-slate-700 cursor-pointer shadow-inner"></button>
+        </div>
+
+        <button id="resetMatchBtn" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-semibold py-2.5 rounded-xl text-xs transition cursor-pointer">
+            🔄 New Round
+        </button>
+    </div>
+    <script src="tic.js"></script>
+</body>
+</html>

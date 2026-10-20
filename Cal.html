@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Phone Calculator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center p-4">
+
+    <!-- Phone Chassis -->
+    <div class="w-[320px] bg-black border-4 border-slate-700 rounded-[44px] p-5 shadow-2xl relative">
+        <div class="w-24 h-4 bg-slate-900 rounded-full mx-auto mb-4 flex items-center justify-center">
+            <div class="w-2 h-2 bg-black rounded-full mr-2"></div>
+            <div class="w-1.5 h-1.5 bg-blue-900 rounded-full"></div>
+        </div>
+
+        <div class="text-right py-4 px-2 mb-2 flex flex-col justify-end min-h-[90px]">
+            <span id="calcEquation" class="text-xs text-slate-400 font-mono tracking-wider h-4"></span>
+            <span id="calcDisplay" class="text-4xl font-light text-white overflow-x-auto whitespace-nowrap">0</span>
+        </div>
+
+        <div class="grid grid-cols-4 gap-2.5">
+            <button id="btnAC" class="bg-slate-600 hover:bg-slate-500 text-slate-100 font-medium aspect-square rounded-full text-base transition active:scale-95 cursor-pointer">AC</button>
+            <button id="btnDEL" class="bg-slate-600 hover:bg-slate-500 text-slate-100 font-medium aspect-square rounded-full text-base transition active:scale-95 cursor-pointer">⌫</button>
+            <button id="btnPercent" class="bg-slate-600 hover:bg-slate-500 text-slate-100 font-medium aspect-square rounded-full text-base transition active:scale-95 cursor-pointer">%</button>
+            <button class="op-btn bg-amber-500 hover:bg-amber-400 text-white font-bold aspect-square rounded-full text-xl transition active:scale-95 cursor-pointer" data-op="/">÷</button>
+
+            <button class="num-btn bg-slate-800 hover:bg-slate-700 text-white font-semibold aspect-square rounded-full text-xl transition active:scale-95 cursor-pointer">7</button>
+            <button class="num-btn bg-slate-800 hover:bg-slate-700 text-white font-semibold aspect-square rounded-full text-xl transition active:scale-95 cursor-pointer">8</button>
+            <button class="num-btn bg-slate-800 hover:bg-slate-700 text-white font-semibold aspect-square rounded-full text-xl transition active:scale-95 cursor-pointer">9</button>
+            <button class="op-btn bg-amber-500 hover:bg-amber-400 text-white font-bold aspect-square rounded-full text-xl transition active:scale-95 cursor-pointer" data-op="*">×</button>
+
+            <button class="num-btn bg-slate-800 hover:bg-slate-700 text-white font-semibold aspect-square rounded-full text-xl transition active:scale-95 cursor-pointer">4</button>
+            <button class="num-btn bg-slate-800 hover:bg-slate-700 text-white font-semibold aspect-square rounded-full text-xl transition active:scale-95 cursor-pointer">5</button>
+            <button class="num-btn bg-slate-800 hover:bg-slate-700 text-white font-semibold aspect-square rounded-full text-xl transition active:scale-95 cursor-pointer">6</button>
+            <button class="op-btn bg-amber-500 hover:bg-amber-400 text-white font-bold aspect-square rounded-full text-xl transition active:scale-95 cursor-pointer" data-op="-">−</button>
+
+            <button class="num-btn bg-slate-800 hover:bg-slate-700 text-white font-semibold aspect-square rounded-full text-xl transition active:scale-95 cursor-pointer">1</button>
+            <button class="num-btn bg-slate-800 hover:bg-slate-700 text-white font-semibold aspect-square rounded-full text-xl transition active:scale-95 cursor-pointer">2</button>
+            <button class="num-btn bg-slate-800 hover:bg-slate-700 text-white font-semibold aspect-square rounded-full text-xl transition active:scale-95 cursor-pointer">3</button>
+            <button class="op-btn bg-amber-500 hover:bg-amber-400 text-white font-bold aspect-square rounded-full text-xl transition active:scale-95 cursor-pointer" data-op="+">+</button>
+
+            <button class="num-btn col-span-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-full text-xl transition active:scale-95 text-left pl-6 cursor-pointer">0</button>
+            <button id="btnDot" class="bg-slate-800 hover:bg-slate-700 text-white font-bold aspect-square rounded-full text-xl transition active:scale-95 cursor-pointer">.</button>
+            <button id="btnEquals" class="bg-amber-500 hover:bg-amber-400 text-white font-bold aspect-square rounded-full text-xl transition active:scale-95 cursor-pointer">=</button>
+        </div>
+
+        <div class="w-28 h-1 bg-slate-600 rounded-full mx-auto mt-4"></div>
+    </div>
+    <script src="cal.js"></script>
+</body>
+</html>
