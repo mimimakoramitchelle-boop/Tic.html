@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game 2: Rock Paper Scissors Championship Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes shakeLeft {
+            0% { transform: rotate(0deg) translateY(0); }
+            25% { transform: rotate(-22deg) translateY(-12px); }
+            50% { transform: rotate(0deg) translateY(0); }
+            75% { transform: rotate(-22deg) translateY(-12px); }
+            100% { transform: rotate(0deg) translateY(0); }
+        }
+        @keyframes shakeRight {
+            0% { transform: rotate(0deg) translateY(0) scaleX(-1); }
+            25% { transform: rotate(22deg) translateY(-12px) scaleX(-1); }
+            50% { transform: rotate(0deg) translateY(0) scaleX(-1); }
+            75% { transform: rotate(22deg) translateY(-12px) scaleX(-1); }
+            100% { transform: rotate(0deg) translateY(0) scaleX(-1); }
+        }
+        .anim-shake-left {
+            animation: shakeLeft 1s ease-in-out infinite;
+        }
+        .anim-shake-right {
+            animation: shakeRight 1s ease-in-out infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+        .glow-pulse {
+            animation: pulseGlow 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-center p-3 sm:p-6 font-sans relative overflow-x-hidden selection:bg-amber-500 selection:text-slate-950">
+
+    <!-- Confetti Canvas -->
+    <canvas id="confettiCanvas" class="fixed inset-0 pointer-events-none z-50 w-full h-full"></canvas>
+
+    <!-- Background glowing ambient orbs -->
+    <div class="fixed top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="fixed bottom-0 right-1/4 w-96 h-96 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <main class="w-full max-w-2xl bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl backdrop-blur-xl p-4 sm:p-7 relative z-10 my-4">
+        
+        <!-- Header Banner -->
+        <header class="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-800 gap-3">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-black bg-amber-500/15 text-amber-400 border border-amber-500/30 uppercase tracking-wider">
+                        Project #2 · Codetrain JS
+                    </span>
+                    <span id="streakBadge" class="hidden items-center px-2 py-0.5 rounded-full text-[11px] font-black bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                        🔥 <span id="streakCount">0</span> Win Streak
+                    </span>
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2">
+                    <span>⚔️ Rock Paper Scissors</span>
+                    <span class="text-xs px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 font-bold hidden sm:inline-block">Arena Championship</span>
+                </h1>
+                <p class="text-xs text-slate-400 mt-0.5">Custom Match Formats • 3 Smart AI Engines • Web Audio Synth</p>
+            </div>
+
+            <!-- Controls: Sound & Rules Modal -->
+            <div class="flex items-center gap-2 self-start sm:self-auto">
+                <button id="soundToggleBtn" title="Toggle Sound (M)" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition cursor-pointer text-xs font-semibold flex items-center gap-1.5">
+                    <span id="soundIcon">🔊</span>
+                    <span class="hidden sm:inline">Audio</span>
+                </button>
+                <button id="rulesModalBtn" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition cursor-pointer text-xs font-semibold flex items-center gap-1.5">
+                    <span>📜</span>
+                    <span class="hidden sm:inline">Rules</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Match Settings Bar -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 my-4 p-3 bg-slate-950/60 rounded-2xl border border-slate-800/80 text-xs">
+            <!-- Format selector -->
+            <div>
+                <label class="block text-slate-400 font-semibold mb-1 text-[11px]">Match Format</label>
+                <select id="matchFormatSelect" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-xl px-2.5 py-1.5 font-medium focus:outline-none focus:border-amber-500 cursor-pointer">
+                    <option value="first_to_3">Best of 5 (First to 3)</option>
+                    <option value="first_to_5">Best of 9 (First to 5)</option>
+                    <option value="endless">Endless / Streak Mode</option>
+                </select>
+            </div>
+
+            <!-- Game Variant -->
+            <div>
+                <label class="block text-slate-400 font-semibold mb-1 text-[11px]">Game Mode</label>
+                <select id="gameModeSelect" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-xl px-2.5 py-1.5 font-medium focus:outline-none focus:border-amber-500 cursor-pointer">
+                    <option value="classic">Classic (Rock, Paper, Scissors)</option>
+                    <option value="rpsls">Expanded (RPS + Lizard + Spock)</option>
+                </select>
+            </div>
+
+            <!-- Bot AI Engine -->
+            <div>
+                <label class="block text-slate-400 font-semibold mb-1 text-[11px]">Computer AI Brain</label>
+                <select id="botBrainSelect" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-xl px-2.5 py-1.5 font-medium focus:outline-none focus:border-amber-500 cursor-pointer">
+                    <option value="smart">Tactician AI (Pattern Counter)</option>
+                    <option value="predictor">Mind Reader (Markov Chain)</option>
+                    <option value="random">Random Bot (Beginner)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Series Progress Bar (for Best Of matches) -->
+        <div id="seriesProgressBarContainer" class="mb-4">
+            <div class="flex justify-between items-center text-[11px] font-bold text-slate-400 mb-1">
+                <span id="playerTargetScoreText">Player: 0 / 3</span>
+                <span id="seriesStatusText" class="text-amber-400 font-black">MATCH IN PROGRESS</span>
+                <span id="compTargetScoreText">Bot: 0 / 3</span>
+            </div>
+            <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden flex border border-slate-800">
+                <div id="playerProgressFill" class="bg-emerald-500 h-full transition-all duration-300 w-0"></div>
+                <div class="flex-1 bg-slate-900"></div>
+                <div id="compProgressFill" class="bg-rose-500 h-full transition-all duration-300 w-0"></div>
+            </div>
+        </div>
+
+        <!-- Arena Clash Display -->
+        <div class="relative bg-gradient-to-b from-slate-950 to-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 mb-5 text-center overflow-hidden">
+            <!-- Scoreboard Row -->
+            <div class="grid grid-cols-3 gap-2 pb-4 mb-4 border-b border-slate-800/80">
+                <div class="bg-slate-900/80 border border-emerald-500/20 rounded-xl p-2.5">
+                    <div class="flex items-center justify-center gap-1.5 text-xs text-emerald-400 font-bold mb-0.5">
+                        <span>👤</span> You
+                    </div>
+                    <div id="playerScore" class="text-3xl font-black text-emerald-400">0</div>
+                    <div class="text-[10px] text-slate-400 font-semibold">Victories</div>
+                </div>
+
+                <div class="bg-slate-900/80 border border-slate-700/50 rounded-xl p-2.5">
+                    <div class="flex items-center justify-center gap-1.5 text-xs text-slate-400 font-bold mb-0.5">
+                        <span>🤝</span> Draws
+                    </div>
+                    <div id="tieScore" class="text-3xl font-black text-slate-300">0</div>
+                    <div class="text-[10px] text-slate-400 font-semibold">Ties</div>
+                </div>
+
+                <div class="bg-slate-900/80 border border-rose-500/20 rounded-xl p-2.5">
+                    <div class="flex items-center justify-center gap-1.5 text-xs text-rose-400 font-bold mb-0.5">
+                        <span>🤖</span> Bot
+                    </div>
+                    <div id="compScore" class="text-3xl font-black text-rose-400">0</div>
+                    <div class="text-[10px] text-slate-400 font-semibold">Victories</div>
+                </div>
+            </div>
+
+            <!-- Duel Visualizer -->
+            <div class="flex items-center justify-around py-3 sm:py-6">
+                <!-- Player Side -->
+                <div class="flex flex-col items-center">
+                    <span class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider mb-2">You</span>
+                    <div id="playerHandCard" class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-slate-900 border-2 border-emerald-500/40 flex items-center justify-center text-5xl sm:text-6xl shadow-lg transition-transform duration-200">
+                        <span id="playerIcon">✊</span>
+                    </div>
+                    <span id="playerChoiceLabel" class="text-xs font-bold text-slate-300 mt-2">Ready</span>
+                </div>
+
+                <!-- Center Countdown / VS Banner -->
+                <div class="flex flex-col items-center px-2">
+                    <div id="countdownBadge" class="text-lg sm:text-2xl font-black text-amber-400 tracking-wider h-8 flex items-center justify-center uppercase">
+                        VS
+                    </div>
+                    <span id="roundCounterText" class="text-[11px] text-slate-500 font-semibold mt-1">Round 0</span>
+                </div>
+
+                <!-- Computer Side -->
+                <div class="flex flex-col items-center">
+                    <span class="text-[11px] font-bold text-rose-400 uppercase tracking-wider mb-2">Bot</span>
+                    <div id="compHandCard" class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-slate-900 border-2 border-rose-500/40 flex items-center justify-center text-5xl sm:text-6xl shadow-lg transition-transform duration-200 transform scale-x-[-1]">
+                        <span id="compIcon">✊</span>
+                    </div>
+                    <span id="compChoiceLabel" class="text-xs font-bold text-slate-300 mt-2">Ready</span>
+                </div>
+            </div>
+
+            <!-- Dynamic Result Announcement Box -->
+            <div id="resultBox" class="mt-4 p-3 rounded-xl bg-slate-900 border border-slate-800 transition-all duration-300">
+                <p id="resultTitle" class="text-base sm:text-lg font-black text-amber-400">Choose your weapon below to battle!</p>
+                <p id="resultDetail" class="text-xs text-slate-400 mt-0.5">Keyboard shortcuts: 1 (Rock), 2 (Paper), 3 (Scissors)</p>
+            </div>
+        </div>
+
+        <!-- Choice Weapon Buttons -->
+        <div>
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2 font-semibold">
+                <span>Select Your Move:</span>
+                <span class="text-[11px] text-slate-500">Tip: Click or use hotkeys</span>
+            </div>
+
+            <!-- Classic 3 Buttons -->
+            <div id="classicChoices" class="grid grid-cols-3 gap-2.5 sm:gap-3.5 mb-2.5">
+                <button data-choice="rock" class="choice-btn group bg-slate-900 hover:bg-slate-800 border-2 border-slate-800 hover:border-amber-500/60 rounded-2xl p-3 sm:p-4 text-center transition-all duration-150 active:scale-95 cursor-pointer shadow-md">
+                    <div class="text-4xl sm:text-5xl mb-1.5 transition-transform group-hover:scale-110">✊</div>
+                    <div class="text-xs sm:text-sm font-black text-white">Rock</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5 font-medium group-hover:text-amber-400">Key [1] or [R]</div>
+                </button>
+
+                <button data-choice="paper" class="choice-btn group bg-slate-900 hover:bg-slate-800 border-2 border-slate-800 hover:border-cyan-500/60 rounded-2xl p-3 sm:p-4 text-center transition-all duration-150 active:scale-95 cursor-pointer shadow-md">
+                    <div class="text-4xl sm:text-5xl mb-1.5 transition-transform group-hover:scale-110">✋</div>
+                    <div class="text-xs sm:text-sm font-black text-white">Paper</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5 font-medium group-hover:text-cyan-400">Key [2] or [P]</div>
+                </button>
+
+                <button data-choice="scissors" class="choice-btn group bg-slate-900 hover:bg-slate-800 border-2 border-slate-800 hover:border-rose-500/60 rounded-2xl p-3 sm:p-4 text-center transition-all duration-150 active:scale-95 cursor-pointer shadow-md">
+                    <div class="text-4xl sm:text-5xl mb-1.5 transition-transform group-hover:scale-110">✌️</div>
+                    <div class="text-xs sm:text-sm font-black text-white">Scissors</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5 font-medium group-hover:text-rose-400">Key [3] or [S]</div>
+                </button>
+            </div>
+
+            <!-- Extra Buttons for Lizard / Spock (Toggled via mode) -->
+            <div id="rpslsExtraChoices" class="hidden grid grid-cols-2 gap-2.5 sm:gap-3.5 mb-2.5">
+                <button data-choice="lizard" class="choice-btn group bg-slate-900 hover:bg-slate-800 border-2 border-slate-800 hover:border-emerald-500/60 rounded-2xl p-3 sm:p-4 text-center transition-all duration-150 active:scale-95 cursor-pointer shadow-md">
+                    <div class="text-4xl sm:text-5xl mb-1.5 transition-transform group-hover:scale-110">🦎</div>
+                    <div class="text-xs sm:text-sm font-black text-white">Lizard</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5 font-medium group-hover:text-emerald-400">Key [4] or [L]</div>
+                </button>
+
+                <button data-choice="spock" class="choice-btn group bg-slate-900 hover:bg-slate-800 border-2 border-slate-800 hover:border-purple-500/60 rounded-2xl p-3 sm:p-4 text-center transition-all duration-150 active:scale-95 cursor-pointer shadow-md">
+                    <div class="text-4xl sm:text-5xl mb-1.5 transition-transform group-hover:scale-110">🖖</div>
+                    <div class="text-xs sm:text-sm font-black text-white">Spock</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5 font-medium group-hover:text-purple-400">Key [5] or [K]</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Action Bar: Reset & Match History Drawer -->
+        <div class="flex items-center gap-2 pt-3">
+            <button id="resetMatchBtn" class="flex-1 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 font-bold py-2.5 px-4 rounded-xl text-xs transition border border-slate-700 cursor-pointer flex items-center justify-center gap-2">
+                <span>🔄</span> Reset Current Series
+            </button>
+            <button id="toggleHistoryBtn" class="bg-slate-900 hover:bg-slate-800 text-slate-300 font-semibold py-2.5 px-4 rounded-xl text-xs transition border border-slate-800 cursor-pointer flex items-center gap-1.5">
+                <span>📜</span> <span id="historyBtnLabel">View Battle Log (0)</span>
+            </button>
+        </div>
+
+        <!-- Match History Panel (Collapsible) -->
+        <div id="historyDrawer" class="hidden mt-4 pt-4 border-t border-slate-800">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="text-xs font-black text-white uppercase tracking-wider">Round-by-Round Battle Log</h3>
+                <button id="clearHistoryBtn" class="text-[11px] text-rose-400 hover:text-rose-300 cursor-pointer font-semibold">
+                    Clear Log
+                </button>
+            </div>
+            <div id="historyList" class="space-y-1.5 max-h-48 overflow-y-auto pr-1 text-xs">
+                <p class="text-slate-500 text-center py-4 text-xs">No rounds recorded yet. Make a move!</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Rules Modal -->
+    <div id="rulesModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl relative">
+            <button id="closeRulesBtn" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl cursor-pointer">
+                ✕
+            </button>
+            <h2 class="text-xl font-black text-white flex items-center gap-2 mb-3">
+                <span>📜</span> Arena Rules &amp; Win Matrix
+            </h2>
+            
+            <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <h4 class="font-bold text-amber-400 mb-1">Classic RPS Rules:</h4>
+                    <p>• ✊ <strong>Rock</strong> crushes ✌️ <strong>Scissors</strong></p>
+                    <p>• ✌️ <strong>Scissors</strong> cuts ✋ <strong>Paper</strong></p>
+                    <p>• ✋ <strong>Paper</strong> covers ✊ <strong>Rock</strong></p>
+                </div>
+
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <h4 class="font-bold text-indigo-400 mb-1">RPSLS (Lizard-Spock) Expansion:</h4>
+                    <p>• 🦎 <strong>Lizard</strong> eats Paper &amp; poisons Spock</p>
+                    <p>• 🖖 <strong>Spock</strong> smashes Scissors &amp; vaporizes Rock</p>
+                    <p>• ✊ <strong>Rock</strong> crushes Lizard</p>
+                    <p>• ✌️ <strong>Scissors</strong> decapitates Lizard</p>
+                    <p>• ✋ <strong>Paper</strong> disproves Spock</p>
+                </div>
+
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <h4 class="font-bold text-emerald-400 mb-1">AI Personalities:</h4>
+                    <p>• <strong>Tactician AI:</strong> Analyzes your previous pick to deploy the statistical counter-pick.</p>
+                    <p>• <strong>Mind Reader (Markov):</strong> Builds a transition probability matrix based on your tendencies to predict what you'll throw next!</p>
+                    <p>• <strong>Random Bot:</strong> Pure uniform probability generator.</p>
+                </div>
+            </div>
+
+            <button id="understoodRulesBtn" class="mt-5 w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-2.5 rounded-xl text-xs transition cursor-pointer">
+                Got It, Let's Play!
+            </button>
+        </div>
+    </div>
+
+    <!-- Standalone Script -->
+    <script src="Rock.js"></script>
+</body>
+</html>
